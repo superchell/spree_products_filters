@@ -1,0 +1,17 @@
+/.bundle/
+/.yardoc
+/Gemfile.lock
+/_yardoc/
+/coverage/
+/doc/
+/pkg/
+/spec/reports/
+/tmp/
+/.DS_Store
+/app/.DS_Store
+/app/controllers/.DS_Store
+
+.idea
+.ruby-version
+.ruby-gemset
+spec/dummy

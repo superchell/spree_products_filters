@@ -1,0 +1,12 @@
+ru:
+  spree:
+    price_range_filter:      'Ценовой фильтр:'
+    options_filter:          'Опциональные фильтры:'
+    property_filters:        'Фильтры свойств товаров:'
+    price_range:             'Диапазон цен:'
+    sort_by:                 'Сортировать:'
+    descend_by_updated_at:   'Новые'
+    ascend_by_master_price:  "Дешевые <i class='glyphicon glyphicon-sort-by-attributes'></i>"
+    descend_by_master_price: "Дорогие <i class='glyphicon glyphicon-sort-by-attributes-alt'></i>"
+    ascend_by_name:          "А - Я <i class='glyphicon glyphicon-sort-by-alphabet'></i>"
+    descend_by_name:         "Я - A <i class='glyphicon glyphicon-sort-by-alphabet-alt'></i>"

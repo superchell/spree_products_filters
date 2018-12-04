@@ -1,0 +1,15 @@
+#slider-range {
+    margin-bottom: 7px;
+}
+#amount {
+    border: 0;
+    color: #1e89d1;
+    font-weight: bold;
+}
+#sort-links{
+    padding-bottom: 7px;
+    text-align: right;
+}
+.filters_label {
+    margin-top: 5px;
+}

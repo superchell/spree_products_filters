@@ -1,0 +1,7 @@
+#sort-links
+  .row
+    .col-sm-12
+      = Spree.t(:sort_by)
+      .btn-group{'aria-label' => 'sort-links', role: 'group'}
+        - Spree::FiltersConfiguration::Config.allowed_sortings.each do |sorting|
+          = link_to_sort sorting

@@ -1,0 +1,10 @@
+%h4= Spree.t(:options_filter)
+- option_types.each do |option_type|
+  = label_tag option_type.presentation, "#{option_type.presentation}:", class: 'filters_label'
+  %br
+  - option_type.option_values.each do |option_value|
+    - is_checked = filter_checked?([:option_types, :names], option_value.name)
+    = check_box('filters[option_types]', 'names', { multiple: true, checked: is_checked }, option_value.name, nil)
+    = option_value.presentation
+  %br
+%br

@@ -1,0 +1,12 @@
+en:
+  spree:
+    price_range_filter:      'Price range filter:'
+    options_filter:          'Option types filters:'
+    property_filters:        'Properties filters:'
+    price_range:             'Price range:'
+    sort_by:                 'Sort by:'
+    descend_by_updated_at:   'Latest'
+    ascend_by_master_price:  "Low Price <i class='glyphicon glyphicon-sort-by-attributes'></i>"
+    descend_by_master_price: "High Price <i class='glyphicon glyphicon-sort-by-attributes-alt'></i>"
+    ascend_by_name:          "A - Z <i class='glyphicon glyphicon-sort-by-alphabet'></i>"
+    descend_by_name:         "Z - A <i class='glyphicon glyphicon-sort-by-alphabet-alt'></i>"
