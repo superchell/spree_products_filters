@@ -21,7 +21,7 @@ Gem::Specification.new do |spec|
   spec.require_path = 'lib'
   spec.requirements << 'none'
 
-  spec.add_runtime_dependency 'spree_core', '~> 3.6.0'
+  spec.add_runtime_dependency 'spree_core', '>= 3.6.0'
   spec.add_runtime_dependency 'haml'
   spec.add_runtime_dependency 'jquery-ui-rails'
 
