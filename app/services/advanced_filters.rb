@@ -15,7 +15,7 @@ class AdvancedFilters
                    max_range: params_clone[:max_price_range].present? ? params_clone[:max_price_range].to_i : max_price,
                    collection_min_price: min_price,
                    collection_max_price: max_price}
-    properties = products.map(&:properties).flatten.uniq
+    properties = products.includes(:properties).map(&:properties).flatten.uniq
     properties = properties.blank? ? nil : allowed_properties(properties)
 
     product_properties = products.map(&:product_properties).flatten.uniq.map(&:value).uniq
@@ -25,7 +25,7 @@ class AdvancedFilters
                     products:   products,   price_range:        price_range }
 
     if @params[:controller] == 'spree/taxons' && @params[:action] == 'show'
-      option_types = products.map(&:option_types).flatten.uniq
+      option_types = products.includes(:option_types).map(&:option_types).flatten.uniq
       option_types = option_types.blank? ? nil : option_types
 
       result_hash[:option_types] = option_types
