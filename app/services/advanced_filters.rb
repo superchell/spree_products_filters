@@ -6,7 +6,7 @@ class AdvancedFilters
 
   def filter_results
     @params[:filters] ||= {}
-    params_clone = @params[:filters].deep_dup.delete_if { |_query, value| value.blank? }
+    params_clone = @params[:filters].permit!.deep_dup.delete_if { |_query, value| value.blank? }
 
     products    = filters_merger(params_clone, @products).distinct
     min_price   = products.map(&:price).min.to_i
