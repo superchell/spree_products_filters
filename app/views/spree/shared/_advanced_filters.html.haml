@@ -2,16 +2,17 @@
   -# Search request repeater
   - if params[:keywords].present?
     = hidden_field_tag :keywords, params[:keywords]
+  -if @price_range.present?
+    -# Price Range filter
+    %h4= Spree.t(:price_range_filter)
+    %p
+      = label_tag 'amount', Spree.t(:price_range)
+      %input#amount{readonly: '', type: '1', data: {currency: current_currency}}
 
-  -# Price Range filter
-  %h4= Spree.t(:price_range_filter)
-  %p
-    = label_tag 'amount', Spree.t(:price_range)
-    %input#amount{readonly: '', type: '1', data: {currency: current_currency}}
-  #slider-range
-    %span.hidden#range_limits{data: @price_range }
-  = hidden_field_tag 'filters[min_price_range]', @price_range[:min_range], {id: :min_price_range}
-  = hidden_field_tag 'filters[max_price_range]', @price_range[:max_range], {id: :max_price_range}
+      #slider-range
+        %span.hidden#range_limits{data: @price_range }
+      = hidden_field_tag 'filters[min_price_range]', @price_range[:min_range], {id: :min_price_range}
+      = hidden_field_tag 'filters[max_price_range]', @price_range[:max_range], {id: :max_price_range}
   - if @option_types.present?
     = render 'spree/shared/options_filters', option_types: @option_types
   - if @properties.present?
