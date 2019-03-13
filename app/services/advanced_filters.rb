@@ -1,35 +1,39 @@
 class AdvancedFilters
   def initialize(params = {}, products)
-    @params   = params
+    @params   = params.permit!
     @products = products
   end
 
   def filter_results
     @params[:filters] ||= {}
-    params_clone = @params[:filters].permit!.deep_dup.delete_if { |_query, value| value.blank? }
 
-    products    = filters_merger(params_clone, @products).distinct
-    min_price   = products.map(&:price).min.to_i
-    max_price   = products.map(&:price).max.round.to_i
-    price_range = {min_range: params_clone[:min_price_range].present? ? params_clone[:min_price_range].to_i : min_price,
-                   max_range: params_clone[:max_price_range].present? ? params_clone[:max_price_range].to_i : max_price,
-                   collection_min_price: min_price,
-                   collection_max_price: max_price}
-    properties = products.includes(:properties).map(&:properties).flatten.uniq
-    properties = properties.blank? ? nil : allowed_properties(properties)
+    params_clone  = @params[:filters].permit!.deep_dup.delete_if { |_query, value| value.blank? }
+    result_hash   = { properties: nil, product_properties: nil,
+                      products:   [],   price_range:      nil }
 
-    product_properties = products.map(&:product_properties).flatten.uniq.map(&:value).uniq
-    product_properties = product_properties.blank? ? nil : product_properties
+    return result_hash if @products.blank?
 
-    result_hash = { properties: properties, product_properties: product_properties,
-                    products:   products,   price_range:        price_range }
+    min_price              = @products.map(&:price).min.to_i
+    max_price              = @products.map(&:price).max.round.to_i
+    price_range            = {min_range: params_clone[:min_price_range].present? ? params_clone[:min_price_range].to_i : min_price,
+                              max_range: params_clone[:max_price_range].present? ? params_clone[:max_price_range].to_i : max_price,
+                              collection_min_price: min_price,
+                              collection_max_price: max_price}
+    result_hash[:price_range] = price_range
+
+    properties               = @products.includes(:properties).map(&:properties).flatten.uniq
+    result_hash[:properties] = allowed_properties(properties) unless properties.blank?
+
+    product_properties               = @products.map(&:product_properties).flatten.uniq.map(&:value).uniq
+    result_hash[:product_properties] = product_properties unless product_properties.blank?
 
     if @params[:controller] == 'spree/taxons' && @params[:action] == 'show'
-      option_types = products.includes(:option_types).map(&:option_types).flatten.uniq
-      option_types = option_types.blank? ? nil : option_types
-
-      result_hash[:option_types] = option_types
+      option_types               = @products.includes(:option_types).map(&:option_types).flatten.uniq
+      result_hash[:option_types] = option_types unless option_types.blank?
     end
+
+    products    = filters_merger(params_clone, @products).distinct
+    result_hash[:products] = products
 
     result_hash
   end
@@ -45,8 +49,8 @@ class AdvancedFilters
       products = products.with_option_values(params[:option_types][:names])
     end
 
-    if params[:properties].present? && !params[:properties][:types].blank?
-      products = products.with_property_values(params[:properties][:types])
+    if params[:properties].present? && params[:properties].keys.present?
+      products = products.where(id: filtered_property_products(params[:properties]))
     end
 
     products
@@ -57,6 +61,19 @@ class AdvancedFilters
       properties - Spree::Property.where(name: Spree::FiltersConfiguration::Config.hidden_properties)
     else
       properties
+    end
+  end
+
+  def filtered_property_products(properties)
+    res = []
+    properties.each do |property_id, value|
+      res << Spree::ProductProperty.where("property_id = ? AND value IN (?)", property_id, value).distinct.map(&:product_id)
+    end
+
+    if res.size <= 1
+      res.flatten
+    else
+      res.inject(&:&)
     end
   end
 end
