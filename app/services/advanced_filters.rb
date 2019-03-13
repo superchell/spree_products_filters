@@ -6,7 +6,7 @@ class AdvancedFilters
 
   def filter_results
     @params[:filters] ||= {}
-    # byebug
+
     params_clone  = @params[:filters].permit!.deep_dup.delete_if { |_query, value| value.blank? }
     result_hash   = { properties: nil, product_properties: nil,
                       products:   [],   price_range:      nil }
@@ -49,13 +49,7 @@ class AdvancedFilters
     end
 
     if params[:properties].present? && params[:properties].keys.present?
-      pp_table  = Spree::ProductProperty.table_name
-      products_query = products.joins(:properties)
-      params[:properties].each do |property_id, value|
-        products_query = products_query.where("#{pp_table}.property_id = ? AND #{pp_table}.value IN (?)", property_id, value)
-      end
-
-      products = products_query
+      products = products.where(id: filtered_property_products(params[:properties]))
     end
 
     products
@@ -66,6 +60,19 @@ class AdvancedFilters
       properties - Spree::Property.where(name: Spree::FiltersConfiguration::Config.hidden_properties)
     else
       properties
+    end
+  end
+
+  def filtered_property_products(properties)
+    res = []
+    properties.each do |property_id, value|
+      res << Spree::ProductProperty.where("property_id = ? AND value IN (?)", property_id, value).distinct.map(&:product_id)
+    end
+
+    if res.size <= 1
+      res.flatten
+    else
+      res.inject(&:&)
     end
   end
 end
