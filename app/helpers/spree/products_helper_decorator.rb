@@ -21,6 +21,8 @@ Spree::ProductsHelper.class_eval do
   end
 
   def filter_checked?(keys, value)
-    (params[:filters][keys[0]].present? && params[:filters][keys[0]][keys[1]].include?(value)) ? true : false
+    # byebug if keys[0].to_s == 'properties'
+    keys.map!(&:to_s)
+    (params[:filters][keys[0]].present? && params[:filters][keys[0]][keys[1]]&.include?(value)) ? true : false
   end
 end

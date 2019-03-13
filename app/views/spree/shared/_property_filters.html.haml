@@ -4,12 +4,12 @@
     = label_tag property.presentation, "#{property.presentation}:", class: 'filters_label'
     %br
     - property.product_properties.pluck(:value).uniq.each do |value|
-      - is_checked = filter_checked?([:properties, :types], value)
+      - is_checked = filter_checked?([:properties, property.id], value)
       - if params[:filters].present? || (params[:controller] == 'spree/taxons' && params[:action] == 'show')
         - if product_properties.include?(value)
-          = check_box('filters[properties]', 'types', { multiple: true, checked: is_checked }, value, nil)
+          = check_box('filters[properties]', property.id, { multiple: true, checked: is_checked }, value, nil)
           = value
       - else
-        = check_box('filters[properties]', 'types', { multiple: true, checked: is_checked }, value, nil)
+        = check_box('filters[properties]', property.id, { multiple: true, checked: is_checked }, value, nil)
         = value
     %br
