@@ -49,17 +49,13 @@ class AdvancedFilters
     end
 
     if params[:properties].present? && params[:properties].keys.present?
-      query_str   = ''
-      table_name  = Spree::ProductProperty.table_name
-      first_el_id = params[:properties].keys.first
-
+      pp_table  = Spree::ProductProperty.table_name
+      products_query = products.joins(:properties)
       params[:properties].each do |property_id, value|
-        value.map!{|v| "'#{v.sanitize}'"}
-        query_str << " AND " unless property_id == first_el_id
-        query_str << "(#{table_name}.property_id = #{property_id} AND #{table_name}.value IN (#{value.join(', ')}))"
+        products_query = products_query.where("#{pp_table}.property_id = ? AND #{pp_table}.value IN (?)", property_id, value)
       end
 
-      products = products.joins(:properties).where(query_str)
+      products = products_query
     end
 
     products
