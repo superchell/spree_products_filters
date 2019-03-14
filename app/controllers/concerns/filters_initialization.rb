@@ -16,9 +16,6 @@ module FiltersInitialization
   end
 
   def sorting_scope
-    # Spree::FiltersConfiguration::Config.allowed_sortings << :descend_by_updated_at
-    # Spree::FiltersConfiguration::Config.allowed_sortings << :descend_by_price
-
     Spree::FiltersConfiguration::Config.allowed_sortings.include?(param_sorting) ? param_sorting : default_sorting
   end
 
